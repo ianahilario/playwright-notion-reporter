@@ -1,0 +1,35 @@
+{
+  "name": "playwright-notion-reporter",
+  "version": "1.0.1",
+  "description": "Playwright reporter that records test run results to a Notion database",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:example": "npm run build && playwright test",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "playwright",
+    "notion",
+    "reporter",
+    "testing"
+  ],
+  "author": "Iana Hilario <icd.hilario@gmail.com>",
+  "license": "ISC",
+  "peerDependencies": {
+    "@playwright/test": ">=1.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.21",
+    "dotenv": "^16.5.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}
