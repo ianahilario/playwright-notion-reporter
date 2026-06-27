@@ -4,6 +4,14 @@
   "description": "Playwright reporter that records test run results to a Notion database",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ianahilario/playwright-notion-reporter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ianahilario/playwright-notion-reporter/issues"
+  },
+  "homepage": "https://github.com/ianahilario/playwright-notion-reporter#readme",
   "files": [
     "dist"
   ],
