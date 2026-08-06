@@ -10,6 +10,8 @@ jobs:
   test-shards:
     name: Shard ${{ matrix.shard }}/4
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.52.0-noble
     strategy:
       fail-fast: false
       matrix:
@@ -28,8 +30,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+      - name: Prepare blob report directory
+        run: mkdir -p blob-report
 
       - name: Run shard tests (blob reporter)
         run: npx playwright test --reporter blob --shard=${{ matrix.shard }}/4
@@ -45,6 +47,8 @@ jobs:
   merge-and-send-notion:
     name: Merge Reports + Send Notion
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.52.0-noble
     needs: test-shards
     if: ${{ always() }}
     env:
@@ -64,6 +68,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Prepare merged input directory
+        run: mkdir -p all-blob-reports
+
       - name: Download all shard blob reports
         uses: actions/download-artifact@v4
         with:
@@ -72,7 +79,7 @@ jobs:
           merge-multiple: true
 
       - name: Merge reports into JSON
-        run: npx playwright merge-reports --reporter json ./all-blob-reports > merged-report.json
+        run: mkdir -p all-blob-reports && npx playwright merge-reports --reporter json ./all-blob-reports > merged-report.json
 
       - name: Build package
         run: npm run build
