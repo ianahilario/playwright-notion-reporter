@@ -116,13 +116,26 @@ If `apiKey` or `databaseId` is missing, the reporter logs a specific skip messag
 
 You can also post a Notion row from a merged Playwright JSON report without using the reporter lifecycle.
 
-1. Generate your merged JSON report (example):
+1. Ensure your `playwright.config.ts` includes the `blob` reporter so Playwright writes blob report files:
+
+   ```ts
+   import { defineConfig } from '@playwright/test';
+
+   export default defineConfig({
+     reporter: [
+       ['blob'],
+       ['list'],
+     ],
+   });
+   ```
+
+2. Generate your merged JSON report (example):
 
    ```bash
    npx playwright merge-reports --reporter json ./blob-report > merged-report.json
    ```
 
-2. Run the CLI:
+3. Run the CLI:
 
    ```bash
    npx playwright-notion-reporter-cli ./notion-reporter-cli.config.ts ./merged-report.json

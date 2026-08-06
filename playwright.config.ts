@@ -10,6 +10,7 @@ export default defineConfig({
   testDir: './example/tests',
   retries: 1,
   reporter: [
+    ['blob'],
     ['list'],
     [
       './dist/index.js',
