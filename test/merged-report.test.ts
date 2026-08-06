@@ -65,6 +65,63 @@ describe('summarizeMergedPlaywrightReport', () => {
     });
   });
 
+  it('uses higher passed count from suites when merged stats undercount', () => {
+    const summary = summarizeMergedPlaywrightReport({
+      status: 'failed',
+      stats: {
+        expected: 2,
+        skipped: 1,
+        flaky: 1,
+        unexpected: 1,
+        duration: 5_000,
+      },
+      suites: [
+        {
+          specs: [
+            {
+              tests: [
+                {
+                  results: [{ status: 'passed', retry: 0 }],
+                },
+                {
+                  results: [{ status: 'failed', retry: 0 }],
+                },
+                {
+                  results: [{ status: 'skipped', retry: 0 }],
+                },
+                {
+                  results: [{ status: 'passed', retry: 1 }],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          specs: [
+            {
+              tests: [
+                {
+                  results: [{ status: 'passed', retry: 0 }],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(summary).toEqual({
+      counts: {
+        passed: 2,
+        failed: 1,
+        skipped: 1,
+        flaky: 1,
+      },
+      durationSeconds: 5,
+      runStatus: 'Failed',
+    });
+  });
+
   it('throws when report is not an object', () => {
     expect(() => summarizeMergedPlaywrightReport(null)).toThrow(
       'Playwright merged report must be a JSON object.',

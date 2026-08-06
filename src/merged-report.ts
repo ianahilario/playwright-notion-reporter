@@ -106,7 +106,7 @@ export function summarizeMergedPlaywrightReport(
   const fallbackCounts = summarizeAttempts(attempts);
 
   const counts = {
-    passed: passedFromStats > 0 ? passedFromStats : fallbackCounts.passed,
+    passed: Math.max(passedFromStats, fallbackCounts.passed),
     failed: failed > 0 ? failed : fallbackCounts.failed,
     skipped: statsSkipped > 0 ? statsSkipped : fallbackCounts.skipped,
     flaky: statsFlaky > 0 ? statsFlaky : fallbackCounts.flaky,
