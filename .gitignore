@@ -4,3 +4,6 @@ dist/
 .env.secret
 test-results/
 playwright-report/
+notion-reporter-cli.config.ts
+blob-report/
+merged-report.json

@@ -4,6 +4,10 @@
   "description": "Playwright reporter that records test run results to a Notion database",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "playwright-notion-reporter": "dist/cli.js",
+    "playwright-notion-reporter-cli": "dist/cli.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ianahilario/playwright-notion-reporter.git"
@@ -20,6 +24,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:example": "npm run build && playwright test",
+    "test:cli:report": "playwright test --reporter blob || true; playwright merge-reports --reporter json ./blob-report > merged-report.json",
+    "test:cli": "npm run build && npm run test:cli:report && DOTENV_CONFIG_PATH=.env.secret node -r dotenv/config dist/cli.js ./notion-reporter-cli.config.ts ./merged-report.json",
     "prepublishOnly": "npm run build"
   },
   "keywords": [

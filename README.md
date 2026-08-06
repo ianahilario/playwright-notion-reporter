@@ -112,6 +112,33 @@ Store secrets in environment variables — never commit your Notion API key.
 
 If `apiKey` or `databaseId` is missing, the reporter logs a specific skip message and does not fail the test run.
 
+## Standalone CLI for merged JSON reports
+
+You can also post a Notion row from a merged Playwright JSON report without using the reporter lifecycle.
+
+1. Generate your merged JSON report (example):
+
+   ```bash
+   npx playwright merge-reports --reporter json ./blob-report > merged-report.json
+   ```
+
+2. Run the CLI:
+
+   ```bash
+   npx playwright-notion-reporter-cli ./notion-reporter-cli.config.ts ./merged-report.json
+   ```
+
+CLI arguments:
+
+1. `config.ts` (required) — must default export:
+   - `apiKey` (required)
+   - `databaseId` (required)
+   - `statusColumns` (required)
+   - `columns` (optional)
+2. merged report path (optional; defaults to `./merged-report.json`)
+
+You can copy `notion-reporter-cli.config.example.ts` as a starting point.
+
 ## Configuration
 
 ### `NotionReporterOptions`
