@@ -1,0 +1,45 @@
+name: Playwright Multi-Run + Notion CLI
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  multi-run-and-send-notion:
+    runs-on: ubuntu-latest
+    env:
+      NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+      NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run command 1 (full suite, blob output)
+        run: PLAYWRIGHT_BLOB_OUTPUT_DIR=blob-report/run-1 npx playwright test --reporter blob || true
+
+      - name: Run command 2 (targeted suite, blob output)
+        run: PLAYWRIGHT_BLOB_OUTPUT_DIR=blob-report/run-2 npx playwright test example/tests/demo.spec.ts --reporter blob || true
+
+      - name: Merge reports into JSON
+        run: npx playwright merge-reports --reporter json ./blob-report > merged-report.json
+
+      - name: Build package
+        run: npm run build
+
+      - name: Send merged report to Notion
+        run: node dist/cli.js ./notion-reporter-cli.config.ci.ts ./merged-report.json
