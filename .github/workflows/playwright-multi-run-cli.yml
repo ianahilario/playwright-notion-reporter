@@ -46,9 +46,14 @@ jobs:
           run1BlobDir="blob-report/run-1"
           run2BlobDir="blob-report/run-2"
           mergedBlobDir="merged-blob-reports"
+          shopt -s nullglob
 
-          cp -R "${run1BlobDir}/." "${mergedBlobDir}/"
-          cp -R "${run2BlobDir}/." "${mergedBlobDir}/"
+          for zipFile in "${run1BlobDir}"/*.zip; do
+            cp "${zipFile}" "${mergedBlobDir}/run-1-$(basename "${zipFile}")"
+          done
+          for zipFile in "${run2BlobDir}"/*.zip; do
+            cp "${zipFile}" "${mergedBlobDir}/run-2-$(basename "${zipFile}")"
+          done
 
       - name: Check blob report files
         id: blob_reports
