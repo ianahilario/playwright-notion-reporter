@@ -31,21 +31,31 @@ jobs:
       - name: Build package
         run: npm run build
 
-      - name: Prepare blob report directory
-        run: mkdir -p blob-report
+      - name: Prepare blob report directories
+        run: mkdir -p blob-report/run-1 blob-report/run-2 merged-blob-reports
 
       - name: Run command 1 (demo.spec.ts, blob output)
-        run: PLAYWRIGHT_BLOB_OUTPUT_DIR=blob-report npx playwright test example/tests/demo.spec.ts || true
+        run: PLAYWRIGHT_BLOB_OUTPUT_DIR=blob-report/run-1 npx playwright test example/tests/demo.spec.ts || true
 
       - name: Run command 2 (demo2.spec.ts, blob output)
-        run: PLAYWRIGHT_BLOB_OUTPUT_DIR=blob-report npx playwright test example/tests/demo2.spec.ts || true
+        run: PLAYWRIGHT_BLOB_OUTPUT_DIR=blob-report/run-2 npx playwright test example/tests/demo2.spec.ts || true
+
+      - name: Collect blob reports for merge
+        shell: bash
+        run: |
+          run1BlobDir="blob-report/run-1"
+          run2BlobDir="blob-report/run-2"
+          mergedBlobDir="merged-blob-reports"
+
+          cp -R "${run1BlobDir}/." "${mergedBlobDir}/"
+          cp -R "${run2BlobDir}/." "${mergedBlobDir}/"
 
       - name: Check blob report files
         id: blob_reports
         shell: bash
         run: |
           shopt -s nullglob
-          files=(blob-report/*.zip)
+          files=(merged-blob-reports/*.zip)
           if [ ${#files[@]} -eq 0 ]; then
             echo "has_reports=false" >> "$GITHUB_OUTPUT"
             echo "No blob report files found. Skipping merge and Notion upload."
@@ -55,7 +65,7 @@ jobs:
 
       - name: Merge reports into JSON
         if: steps.blob_reports.outputs.has_reports == 'true'
-        run: mkdir -p blob-report && npx playwright merge-reports --reporter json ./blob-report > merged-report.json
+        run: npx playwright merge-reports --reporter json ./merged-blob-reports > merged-report.json
 
       - name: Send merged report to Notion
         if: steps.blob_reports.outputs.has_reports == 'true'
