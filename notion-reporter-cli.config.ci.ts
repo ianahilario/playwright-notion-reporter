@@ -14,16 +14,9 @@ const config: NotionReporterCliConfig = {
   },
   columns: [
     {
-      column_name: 'Run Source',
-      value: 'github-actions',
-      type: 'rich_text',
-    },
-    {
-      column_name: 'Run URL',
-      value: process.env.GITHUB_RUN_ID
-        ? `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
-        : undefined,
-      type: 'url',
+      column_name: 'Name',
+      value: `CI reporter demo run — ${new Date().toISOString()}`,
+      type: 'title',
     },
   ],
 };

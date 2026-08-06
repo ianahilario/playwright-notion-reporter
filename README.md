@@ -111,6 +111,7 @@ export default defineConfig({
 Store secrets in environment variables — never commit your Notion API key.
 
 If `apiKey` or `databaseId` is missing, the reporter logs a specific skip message and does not fail the test run.
+If you add extra entries in `columns` (like `Branch` or `Run URL`), those property names must already exist in your Notion database or the reporter will fail validation.
 
 ## Standalone CLI for merged JSON reports
 
