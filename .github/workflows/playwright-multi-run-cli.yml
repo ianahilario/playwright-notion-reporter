@@ -34,11 +34,11 @@ jobs:
       - name: Prepare blob report directory
         run: mkdir -p blob-report
 
-      - name: Run command 1 (full suite, blob output)
-        run: PLAYWRIGHT_BLOB_OUTPUT_DIR=blob-report npx playwright test || true
-
-      - name: Run command 2 (targeted suite, blob output)
+      - name: Run command 1 (demo.spec.ts, blob output)
         run: PLAYWRIGHT_BLOB_OUTPUT_DIR=blob-report npx playwright test example/tests/demo.spec.ts || true
+
+      - name: Run command 2 (demo2.spec.ts, blob output)
+        run: PLAYWRIGHT_BLOB_OUTPUT_DIR=blob-report npx playwright test example/tests/demo2.spec.ts || true
 
       - name: Check blob report files
         id: blob_reports
